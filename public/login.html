@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Patitas Felices - Login &amp; Register</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8A2BE2",
+                        "primary-hover": "#7a22cc",
+                        "background-light": "#f8f6fc",
+                        "background-dark": "#161022",
+                        "soft-purple": "#f3e8ff",
+                        "soft-blue": "#eef2ff"
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        .paw-pattern {
+            background-image: radial-gradient(#8A2BE2 0.5px, transparent 0.5px), radial-gradient(#8A2BE2 0.5px, #f8f6fc 0.5px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            opacity: 0.04;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f0ff 0%, #eef2ff 100%);
+        }
+    </style>
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="/js/login.js"></script>
+
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-[#1b122d] min-h-screen relative overflow-x-hidden">
+
+    <div class="absolute inset-0 paw-pattern pointer-events-none"></div>
+    <div class="relative flex flex-col min-h-screen">
+        <header class="flex items-center justify-between px-6 md:px-20 py-6">
+            <div class="flex items-center gap-3">
+                <div class="text-primary size-8">
+                    <span class="material-symbols-outlined text-4xl"
+                        style="font-variation-settings: 'FILL' 1">pets</span>
+                </div>
+                <h1 class="text-2xl font-extrabold tracking-tight dark:text-white">Patitas Felices</h1>
+            </div>
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-sm font-semibold hover:text-primary transition-colors dark:text-gray-300"
+                    href="#">Servicios</a>
+                <a class="text-sm font-semibold hover:text-primary transition-colors dark:text-gray-300" href="#">Acerca
+                    de</a>
+                <a class="text-sm font-semibold hover:text-primary transition-colors dark:text-gray-300"
+                    href="#">Contacto</a>
+                <button
+                    class="bg-primary hover:bg-primary-hover text-white px-6 py-2 rounded-full font-bold text-sm transition-all shadow-sm">
+                    Ayuda
+                </button>
+            </nav>
+        </header>
+        <main class="flex-1 flex items-center justify-center px-4 py-10">
+            <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="flex flex-col gap-8">
+                    <div class="space-y-4">
+                        <span
+                            class="inline-block px-4 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-wider">
+                            Bienvenido a la comunidad
+                        </span>
+                        <h2 class="text-5xl md:text-6xl font-black leading-[1.1] dark:text-white">
+                            Cuidando a tus <span class="text-primary">mejores amigos</span>
+                        </h2>
+                        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-md leading-relaxed">
+                            La plataforma líder para el manejo veterinario y cuidado integral de tus mascotas.
+                            Administra citas, vacunas y más de forma sencilla.
+                        </p>
+                    </div>
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] group">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
+                        <img alt="Imagen de un perro feliz corriendo"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            data-alt="Un perro Golden Retriever feliz corriendo en el césped"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlQWOQ-HfWEFx9Cv5vUGSkblZ6oervJWlDEW2kE2Wl0bg4BwNV6CwZKzdmBNb4UR_j6Rgf8-mrGt_u4NV9HzFBe0PIBX3xEaYIYvAyXxZ_8v8qvaYK12h8OF9_Sg60Oryfc1ovIeS6jFZGy9qM6OgwsBxhgCGKLrnc42qrUvr6vGMJpeF7f0rC_piHr9aGUf1_Iy5pwHnz4jWSmpyBQGHV-s8OqWO2uABfkYrDLlovjSLc9LQPGBQFteqXQ0n6Uba57zoysjvsGkw" />
+                        <div class="absolute bottom-6 left-6 z-20 flex items-center gap-4 text-white">
+                            <div class="bg-white/20 backdrop-blur-md p-3 rounded-2xl">
+                                <span class="material-symbols-outlined text-primary"
+                                    style="font-variation-settings: 'FILL' 1">health_and_safety</span>
+                                <p class="text-xs font-bold mt-1">Salud 100%</p>
+                            </div>
+                            <div class="bg-white/20 backdrop-blur-md p-3 rounded-2xl">
+                                <span class="material-symbols-outlined text-primary"
+                                    style="font-variation-settings: 'FILL' 1">calendar_month</span>
+                                <p class="text-xs font-bold mt-1">Citas Hoy</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center lg:justify-end">
+                    <div
+                        class="bg-white dark:bg-background-dark/50 backdrop-blur-sm border border-white/20 dark:border-white/5 w-full max-w-[480px] rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-primary/5">
+                        <div class="flex flex-col gap-8">
+                            <div class="text-center space-y-6">
+                                <h3 class="text-2xl font-bold dark:text-white">Empezar ahora</h3>
+                                <div
+                                    class="flex h-12 w-full items-center justify-center rounded-full bg-soft-purple dark:bg-gray-800 p-1">
+                                    <label
+                                        class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-700 has-[:checked]:shadow-sm has-[:checked]:text-[#1b122d] dark:has-[:checked]:text-white text-primary/70 dark:text-gray-400 text-sm font-bold transition-all">
+                                        <span>Iniciar Sesión</span>
+                                        <input checked="" class="opacity-0 absolute" name="auth-toggle" type="radio"
+                                            value="login" />
+                                    </label>
+                                    <label
+                                        class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-700 has-[:checked]:shadow-sm has-[:checked]:text-[#1b122d] dark:has-[:checked]:text-white text-primary/70 dark:text-gray-400 text-sm font-bold transition-all">
+                                        <span>Registrarse</span>
+                                        <input class="opacity-0 absolute" name="auth-toggle" type="radio"
+                                            value="register" />
+                                    </label>
+                                </div>
+                            </div>
+                            <form id="loginForm" class="flex flex-col gap-5">
+                                <div id="nameContainer" class="space-y-2 hidden">
+                                    <label class="text-sm font-bold ml-4 dark:text-gray-300">Nombre Completo</label>
+                                    <div class="relative">
+                                        <span
+                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">person</span>
+                                        <input id="nombre"
+                                            class="w-full pl-12 pr-4 py-4 rounded-full border-2 border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900 focus:border-primary focus:ring-0 transition-all text-sm outline-none dark:text-white placeholder:text-gray-400"
+                                            placeholder="Tu Nombre" type="text" />
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold ml-4 dark:text-gray-300">Correo Electrónico</label>
+                                    <div class="relative">
+                                        <span
+                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">mail</span>
+                                        <input id="email"
+                                            class="w-full pl-12 pr-4 py-4 rounded-full border-2 border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900 focus:border-primary focus:ring-0 transition-all text-sm outline-none dark:text-white placeholder:text-gray-400"
+                                            placeholder="nombre@ejemplo.com" type="email" required />
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center ml-4 pr-4">
+                                        <label class="text-sm font-bold dark:text-gray-300">Contraseña</label>
+                                        <a class="text-xs font-semibold text-primary hover:underline" href="#">¿La
+                                            olvidaste?</a>
+                                    </div>
+                                    <div class="relative">
+                                        <span
+                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">lock</span>
+                                        <input id="password"
+                                            class="w-full pl-12 pr-4 py-4 rounded-full border-2 border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900 focus:border-primary focus:ring-0 transition-all text-sm outline-none dark:text-white placeholder:text-gray-400"
+                                            placeholder="••••••••" type="password" required />
+                                    </div>
+                                </div>
+                                <button id="submitBtn"
+                                    class="w-full bg-primary text-white py-4 rounded-full font-extrabold text-base hover:bg-primary-hover hover:shadow-lg hover:shadow-primary/20 transition-all mt-4"
+                                    type="submit">
+                                    Ingresar a mi cuenta
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer
+            class="px-6 md:px-20 py-10 flex flex-col md:flex-row justify-between items-center gap-6 border-t border-gray-100 dark:border-gray-800">
+            <div class="flex items-center gap-2 text-gray-400">
+                <span class="material-symbols-outlined text-sm">copyright</span>
+                <span class="text-xs font-medium">2024 Patitas Felices. Todos los derechos reservados.</span>
+            </div>
+            <div class="flex gap-6">
+                <a class="text-xs font-bold text-gray-500 hover:text-primary transition-colors uppercase tracking-widest"
+                    href="#">Privacidad</a>
+                <a class="text-xs font-bold text-gray-500 hover:text-primary transition-colors uppercase tracking-widest"
+                    href="#">Términos</a>
+                <a class="text-xs font-bold text-gray-500 hover:text-primary transition-colors uppercase tracking-widest"
+                    href="#">Soporte</a>
+            </div>
+        </footer>
+    </div>
+
+</body>
+
+</html>

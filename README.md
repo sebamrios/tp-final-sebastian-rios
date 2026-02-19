@@ -55,8 +55,8 @@ Un pequeño backend desarrollado con Node.js y TypeScript para la gestión de un
 
 ### Autenticación y Usuarios (`/api/users`)
 
-| Método   | Endpoint             | Descripción                        | Requiere Auth |
-| :---     | :---                 | :---                               | :---          |
+| Método    | Endpoint             | Descripción                       | Requiere Auth |
+| :---      | :---                 | :---                              | :---          |
 | `POST`   | `/api/users/login`   | Iniciar sesión (Retorna Token JWT) | No            |
 | `POST`   | `/api/users`         | Registrar nuevo usuario            | No            |
 | `GET`    | `/api/users`         | Listar todos los usuarios          | No            |

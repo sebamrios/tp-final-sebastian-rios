@@ -8,6 +8,7 @@ export interface Mascota {
   raza: string;
   edad: number;
   usuarioId: number;
+  ownerName?: string;
   createdAt?: Date;
 }
 

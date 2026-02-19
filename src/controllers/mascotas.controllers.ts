@@ -2,10 +2,7 @@ import { Request, Response } from 'express';
 import * as MascotaService from '../services/mascotas.service';
 import { CreateMascotaDTO } from '../types/mascotas.types';
 
-/**
- * POST /api/mascotas
- * Registra una nueva mascota vinculada a un usuario
- */
+
 export const registrarMascota = async (req: Request, res: Response) => {
     try {
         console.log("--- Petición Recibida ---");
@@ -17,8 +14,8 @@ export const registrarMascota = async (req: Request, res: Response) => {
         // 3. Validamos que el id_usuario no sea undefined antes de seguir
         if (id_usuario === undefined || id_usuario === null) {
             console.error(" Error: id_usuario no llegó en el body");
-            return res.status(400).json({ 
-                message: "El campo id_usuario es obligatorio para vincular la mascota." 
+            return res.status(400).json({
+                message: "El campo id_usuario es obligatorio para vincular la mascota."
             });
         }
 
@@ -27,35 +24,32 @@ export const registrarMascota = async (req: Request, res: Response) => {
             especie,
             raza,
             edad,
-            usuarioId: id_usuario 
+            usuarioId: id_usuario
         };
 
         console.log("DTO enviado al Service:", datosMascota);
 
         const insertId = await MascotaService.registrarNuevaMascota(datosMascota);
 
-        res.status(201).json({ 
-            message: "Mascota creada correctamente", 
-            id: insertId 
+        res.status(201).json({
+            message: "Mascota creada correctamente",
+            id: insertId
         });
 
     } catch (error: any) {
         console.error(" Error en registrarMascota:", error.message);
-        res.status(500).json({ 
-            message: "Error al registrar mascota", 
-            error: error.message 
+        res.status(500).json({
+            message: "Error al registrar mascota",
+            error: error.message
         });
     }
 };
 
-/**
- * GET /api/mascotas/dueño/:usuarioId
- * Lista todas las mascotas de un usuario específico
- */
+
 export const listarMascotasPorCliente = async (req: Request, res: Response) => {
     try {
         const { usuarioId } = req.params;
-        
+
         if (!usuarioId) {
             return res.status(400).json({ message: "ID de usuario requerido" });
         }
@@ -64,9 +58,9 @@ export const listarMascotasPorCliente = async (req: Request, res: Response) => {
         res.json(mascotas);
 
     } catch (error: any) {
-        res.status(500).json({ 
-            message: 'Error al obtener mascotas', 
-            error: error.message 
+        res.status(500).json({
+            message: 'Error al obtener mascotas',
+            error: error.message
         });
     }
 };
@@ -76,11 +70,11 @@ export const actualizarMascota = async (req: Request, res: Response) => {
         const { id } = req.params;
         const { nombre, especie, raza, edad } = req.body;
 
-        const exito = await MascotaService.editarMascota(Number(id), { 
-            nombre, 
-            especie, 
-            raza, 
-            edad 
+        const exito = await MascotaService.editarMascota(Number(id), {
+            nombre,
+            especie,
+            raza,
+            edad
         });
 
         if (exito) {
@@ -94,33 +88,33 @@ export const actualizarMascota = async (req: Request, res: Response) => {
 };
 
 export const listarTodasLasMascotas = async (_req: Request, res: Response) => {
-  try {
-    const mascotas = await MascotaService.obtenerTodasLasMascotas();
-    res.json(mascotas);
-  } catch (error: any) {
-    res.status(500).json({ 
-      message: "Error al obtener el listado completo", 
-      error: error.message 
-    });
-  }
+    try {
+        const mascotas = await MascotaService.obtenerTodasLasMascotas();
+        res.json(mascotas);
+    } catch (error: any) {
+        res.status(500).json({
+            message: "Error al obtener el listado completo",
+            error: error.message
+        });
+    }
 };
 
 export const eliminarMascota = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        
+
         console.log("Intentando eliminar la mascota con ID:", id);
         await MascotaService.eliminarMascota(Number(id));
 
-        res.json({ 
-            message: `Mascota con ID ${id} eliminada con éxito (Ruta Protegida)` 
+        res.json({
+            message: `Mascota con ID ${id} eliminada con éxito (Ruta Protegida)`
         });
 
     } catch (error: any) {
         console.error("Error al eliminar:", error.message);
-        res.status(500).json({ 
-            message: "Error al eliminar la mascota", 
-            error: error.message 
+        res.status(500).json({
+            message: "Error al eliminar la mascota",
+            error: error.message
         });
     }
 };

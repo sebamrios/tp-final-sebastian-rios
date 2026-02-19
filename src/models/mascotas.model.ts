@@ -5,9 +5,7 @@ import {
   UpdateMascotaDTO
 } from '../types/mascotas.types';
 
-/**
- * Crear mascota
- */
+
 export const createMascota = async (
   data: CreateMascotaDTO
 ): Promise<number> => {
@@ -28,24 +26,23 @@ export const createMascota = async (
   return result.insertId;
 };
 
-/**
- * Obtener mascotas por usuario
- */
 export const getMascotasByUsuario = async (
   usuarioId: number
 ): Promise<Mascota[]> => {
 
   const [rows] = await pool.execute(
     `SELECT
-      id,
-      nombre,
-      especie,
-      raza,
-      edad,
-      usuario_id AS usuarioId,
-      created_at AS createdAt
-     FROM mascotas
-     WHERE usuario_id = ?`,
+      m.id,
+      m.nombre,
+      m.especie,
+      m.raza,
+      m.edad,
+      m.usuario_id AS usuarioId,
+      m.created_at AS createdAt,
+      u.nombre AS ownerName
+     FROM mascotas m
+     LEFT JOIN usuarios u ON m.usuario_id = u.id
+     WHERE m.usuario_id = ?`,
     [usuarioId]
   );
 
@@ -53,17 +50,26 @@ export const getMascotasByUsuario = async (
 };
 
 export const updateMascota = async (id: number, data: UpdateMascotaDTO): Promise<boolean> => {
-    const [result]: any = await pool.execute(
-        `UPDATE mascotas SET nombre = ?, especie = ?, raza = ?, edad = ? WHERE id = ?`,
-        [data.nombre, data.especie, data.raza, data.edad, id]
-    );
-    return result.affectedRows > 0;
+  const [result]: any = await pool.execute(
+    `UPDATE mascotas SET nombre = ?, especie = ?, raza = ?, edad = ? WHERE id = ?`,
+    [data.nombre, data.especie, data.raza, data.edad, id]
+  );
+  return result.affectedRows > 0;
 };
 
 export const getAllMascotas = async (): Promise<Mascota[]> => {
   const [rows] = await pool.execute(
-    `SELECT id, nombre, especie, raza, edad, usuario_id AS usuarioId, created_at AS createdAt 
-     FROM mascotas`
+    `SELECT 
+      m.id, 
+      m.nombre, 
+      m.especie, 
+      m.raza, 
+      m.edad, 
+      m.usuario_id AS usuarioId, 
+      m.created_at AS createdAt,
+      u.nombre AS ownerName
+     FROM mascotas m
+     LEFT JOIN usuarios u ON m.usuario_id = u.id`
   );
   return rows as Mascota[];
 };

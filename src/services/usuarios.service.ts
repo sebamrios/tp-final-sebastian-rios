@@ -32,7 +32,8 @@ export const getUserById = async (id: number): Promise<Usuario> => {
 export const createUser = async (
   email: string,
   password: string,
-  role: UserRole
+  role: UserRole,
+  nombre?: string
 ): Promise<number> => {
 
   const existingUser = await usuariosModel.findUsuarioByEmail(email);
@@ -43,7 +44,7 @@ export const createUser = async (
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const newUser: CreateUsuarioDTO = {
-    nombre: email.split('@')[0],
+    nombre: nombre || email.split('@')[0],
     email,
     password: hashedPassword,
     role
@@ -73,16 +74,16 @@ export const login = async (email: string, passwordPlana: string) => {
   }
 
   const secret = process.env.JWT_SECRET || 'clave_secreta_utn_2026';
-  
+
   const token = jwt.sign(
     { id: user.id, email: user.email, role: user.role },
     secret,
     { expiresIn: '4h' }
   );
 
-  return { 
-    token, 
-    user: { id: user.id, nombre: user.nombre, email: user.email, role: user.role } 
+  return {
+    token,
+    user: { id: user.id, nombre: user.nombre, email: user.email, role: user.role }
   };
 };
 

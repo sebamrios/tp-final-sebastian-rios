@@ -2,9 +2,7 @@ import { Request, Response } from 'express';
 import * as usuariosService from '../services/usuarios.service';
 import { UserRole } from '../types/usuarios.types';
 
-/**
- * GET /usuarios
- */
+
 export const getUsuarios = async (req: Request, res: Response) => {
   try {
     const usuarios = await usuariosService.getAllUsers();
@@ -14,13 +12,10 @@ export const getUsuarios = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * GET /usuarios/:id
- */
+
 export const getUsuarioById = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-
     if (isNaN(id)) {
       return res.status(400).json({ message: 'ID inválido' });
     }
@@ -32,12 +27,10 @@ export const getUsuarioById = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * POST /usuarios
- */
+
 export const createUsuario = async (req: Request, res: Response) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password, role, nombre } = req.body;
 
     if (!email || !password || !role) {
       return res.status(400).json({
@@ -48,7 +41,8 @@ export const createUsuario = async (req: Request, res: Response) => {
     const userId = await usuariosService.createUser(
       email,
       password,
-      role as UserRole
+      role as UserRole,
+      nombre
     );
 
     res.status(201).json({
@@ -60,9 +54,7 @@ export const createUsuario = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * PUT /usuarios/:id
- */
+
 export const updateUsuario = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
@@ -79,9 +71,7 @@ export const updateUsuario = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * DELETE /usuarios/:id
- */
+
 export const deleteUsuario = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
@@ -101,7 +91,7 @@ export const deleteUsuario = async (req: Request, res: Response) => {
 
 export const getUsuariosClientes = async (_req: Request, res: Response) => {
   try {
-    const clientes = await usuariosService.obtenerSoloClientes(); 
+    const clientes = await usuariosService.obtenerSoloClientes();
     res.json(clientes);
   } catch (error: any) {
     res.status(500).json({ message: "Error al obtener clientes", error: error.message });

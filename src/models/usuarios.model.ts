@@ -6,9 +6,6 @@ import {
   UpdateUsuarioDTO
 } from '../types/usuarios.types';
 
-/**
- * Crear usuario
- */
 export const createUsuario = async (
   user: CreateUsuarioDTO
 ): Promise<number> => {
@@ -21,14 +18,10 @@ export const createUsuario = async (
   return result.insertId;
 };
 
-/**
- * Buscar usuario por ID
- */
 export const findUsuarioById = async (
   id: number
 ): Promise<Usuario | null> => {
   const [rows] = await pool.execute<RowDataPacket[]>(
-    // Agregamos password por si se necesita en validaciones internas
     `SELECT id, nombre, email, password, role, created_at
      FROM usuarios
      WHERE id = ?`,
@@ -38,10 +31,6 @@ export const findUsuarioById = async (
   return rows.length ? (rows[0] as Usuario) : null;
 };
 
-/**
- * Buscar usuario por email
- * IMPORTANTE: Incluimos el campo password para que el Login funcione.
- */
 export const findUsuarioByEmail = async (
   email: string
 ): Promise<Usuario | null> => {
@@ -55,9 +44,6 @@ export const findUsuarioByEmail = async (
   return rows.length ? (rows[0] as Usuario) : null;
 };
 
-/**
- * Obtener todos los usuarios
- */
 export const getAllUsuarios = async (): Promise<Usuario[]> => {
   const [rows] = await pool.execute<RowDataPacket[]>(
     `SELECT id, nombre, email, role, created_at FROM usuarios`
@@ -66,9 +52,6 @@ export const getAllUsuarios = async (): Promise<Usuario[]> => {
   return rows as Usuario[];
 };
 
-/**
- * Actualizar usuario (parcial)
- */
 export const updateUsuario = async (
   id: number,
   data: UpdateUsuarioDTO
@@ -93,9 +76,6 @@ export const updateUsuario = async (
   );
 };
 
-/**
- * Eliminar usuario
- */
 export const deleteUsuario = async (id: number): Promise<void> => {
   await pool.execute(
     `DELETE FROM usuarios WHERE id = ?`,
@@ -103,12 +83,9 @@ export const deleteUsuario = async (id: number): Promise<void> => {
   );
 };
 
-/**
- * filtrar y obtener solo los clientes
- */
 export const getClientes = async (): Promise<Usuario[]> => {
-    const [rows] = await pool.execute<RowDataPacket[]>(
-        'SELECT id, nombre, email, role FROM usuarios WHERE role = "cliente"'
-    );
-    return rows as Usuario[];
+  const [rows] = await pool.execute<RowDataPacket[]>(
+    'SELECT id, nombre, email, role FROM usuarios WHERE role = "cliente"'
+  );
+  return rows as Usuario[];
 };

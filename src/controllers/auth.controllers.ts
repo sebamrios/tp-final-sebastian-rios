@@ -10,17 +10,15 @@ export const login = async (req: Request, res: Response) => {
         }
 
         const result = await UsuarioService.login(email, password);
-        
-        // Respondemos con el token y los datos del usuario
         res.json({
             message: "Login exitoso",
             ...result
         });
 
     } catch (error: any) {
-        res.status(401).json({ 
-            message: "Error de autenticación", 
-            error: error.message 
+        res.status(401).json({
+            message: "Error de autenticación",
+            error: error.message
         });
     }
 };
