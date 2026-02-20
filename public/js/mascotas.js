@@ -53,7 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch Users to populate select
     const fetchUsers = async () => {
         try {
-            const response = await fetch('/api/users');
+            const response = await fetch('/api/users/all', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             if (response.ok) {
                 const users = await response.json();
                 petOwnerSelect.innerHTML = '<option value="">Seleccione un dueño</option>';
@@ -73,14 +75,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchPets = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('/api/mascotas', {
+            const response = await fetch('/api/mascotas/all', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+
+            if (response.status === 403) {
+                petsTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-slate-500 font-medium italic">No cuenta con la autorización correspondiente.</td></tr>';
+                if (createPetBtn) createPetBtn.classList.add('hidden'); // Hide create button if unauthorized
+                return;
+            }
+
             if (!response.ok) throw new Error('Failed to fetch pets');
             const pets = await response.json();
             renderPets(pets);
         } catch (error) {
             console.error('Error fetching pets:', error);
+            petsTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-red-500">Error al cargar mascotas.</td></tr>';
         }
     };
 

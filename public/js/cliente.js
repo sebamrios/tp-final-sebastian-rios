@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 🔴 2 — Valida Token
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
+    console.log(`[DEBUG UI] Page: cliente.html, URL Param ID: ${clientId}, Logged User ID: ${user.id}, Role: ${user.role}`);
 
     if (!token) {
         alert("Sesión expirada o no iniciada.");
@@ -52,12 +53,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchClientPets = async () => {
         try {
-            // 🔴 1 — Header Authorization Correcto (Bearer)
             const response = await fetch(`/api/mascotas/cliente/${clientId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            // ⚠ 6 — Manejo de 404 semántico
+            if (response.status === 403) {
+                petsTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-slate-500 font-medium italic">No cuenta con la autorización correspondiente.</td></tr>';
+                if (createPetBtn) createPetBtn.classList.add('hidden');
+                return;
+            }
+
             if (!response.ok) {
                 if (response.status === 404) {
                     renderPets([]);
@@ -67,20 +72,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const pets = await response.json();
+            clientPets = pets; // Store globally for historial fetching
             renderPets(pets);
 
         } catch (error) {
             console.error('Error:', error);
-            petsTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-red-500">Error al cargar datos de mascotas.</td></tr>';
+            petsTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-red-500">Error al cargar datos de mascotas.</td></tr>';
         }
     };
 
-    // 🔴 5 — fetchClientDetails() implementado y útil
     const fetchClientDetails = async () => {
         try {
             const response = await fetch(`/api/users/${clientId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+
+            if (response.status === 403) {
+                if (clientNameElement) clientNameElement.textContent = 'Acceso Denegado';
+                if (clientEmailElement) clientEmailElement.textContent = 'No cuenta con autorización';
+                return;
+            }
 
             if (!response.ok) throw new Error('Error al obtener datos del cliente');
 
@@ -98,10 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderPets = (pets) => {
         petsTableBody.innerHTML = '';
-        if (petsCountElement) petsCountElement.textContent = pets.length;
+        if (petsCountElement) petsCountElement.textContent = (pets && pets.length) || 0;
 
         if (!pets || pets.length === 0) {
-            petsTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-slate-500">Este cliente no tiene mascotas registradas.</td></tr>';
+            petsTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-slate-500 italic">Este cliente no tiene mascotas registradas.</td></tr>';
             return;
         }
 
@@ -297,10 +308,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let clientPets = [];
     let veterinarians = [];
 
-    // Fetch Veterinarians
     const fetchVeterinarians = async () => {
+        if (user.role === 'cliente') return; // Clients don't need the list of vets
         try {
-            const response = await fetch('/api/users', {
+            const response = await fetch('/api/users/all', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -312,7 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Fetch Clinical History for all client's pets
     const fetchClientHistorial = async () => {
         if (!clientPets.length) {
             historialTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-slate-500">Primero debe registrar mascotas para este cliente.</td></tr>';
@@ -324,11 +334,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const historialPromises = clientPets.map(pet =>
                 fetch(`/api/historial/${pet.id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
-                }).then(res => res.ok ? res.json() : [])
+                })
             );
 
-            const historialArrays = await Promise.all(historialPromises);
-            const allHistorial = historialArrays.flat();
+            const responses = await Promise.all(historialPromises);
+
+            // Check if any response is 403
+            if (responses.some(res => res.status === 403)) {
+                historialTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-slate-500 font-medium italic">No cuenta con la autorización correspondiente.</td></tr>';
+                if (createHistorialBtn) createHistorialBtn.classList.add('hidden');
+                return;
+            }
+
+            const historyRecords = await Promise.all(responses.map(res => res.ok ? res.json() : []));
+            const allHistorial = historyRecords.flat();
 
             renderHistorial(allHistorial);
         } catch (error) {
@@ -524,6 +543,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // ==================== UI READ-ONLY FOR CLIENTS ====================
+    if (user.role === 'cliente') {
+        const adminElements = [
+            'createPetBtn',
+            'createHistorialBtn',
+            ...document.querySelectorAll('.edit-btn'),
+            ...document.querySelectorAll('.delete-btn'),
+            ...document.querySelectorAll('.edit-historial-btn'),
+            ...document.querySelectorAll('.delete-historial-btn')
+        ];
+
+        adminElements.forEach(el => {
+            const domEl = typeof el === 'string' ? document.getElementById(el) : el;
+            if (domEl) domEl.classList.add('hidden');
+        });
+
+        // Additional check for dynamically rendered rows (we need to hide them after rendering)
+        const observer = new MutationObserver(() => {
+            document.querySelectorAll('.edit-btn, .delete-btn, .edit-historial-btn, .delete-historial-btn, .action-icon-btn').forEach(btn => {
+                btn.classList.add('hidden');
+            });
+        });
+
+        observer.observe(petsTableBody, { childList: true });
+        observer.observe(historialTableBody, { childList: true });
+    }
+
     // Event Listeners for Clinical History
     if (createHistorialBtn) {
         createHistorialBtn.addEventListener('click', () => openHistorialModal());
@@ -542,16 +588,20 @@ document.addEventListener('DOMContentLoaded', () => {
         cancelPetBtn.addEventListener('click', closeModal);
     }
 
-    // ⚠ 7 — Ejecución en paralelo
-    Promise.all([fetchClientDetails(), fetchClientPets(), fetchVeterinarians()]).then(() => {
-        // Store pets for historial management and fetch historial
-        fetch(`/api/mascotas/cliente/${clientId}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        })
-            .then(res => res.ok ? res.json() : [])
-            .then(pets => {
-                clientPets = pets;
-                fetchClientHistorial();
-            });
-    });
+    // ⚠ 7 — Ejecución en paralelo corregida
+    const initPage = async () => {
+        const promises = [fetchClientDetails(), fetchClientPets()];
+        if (user.role !== 'cliente') {
+            promises.push(fetchVeterinarians());
+        }
+
+        await Promise.all(promises);
+
+        // After pets are loaded, fetch historial
+        if (clientPets.length > 0) {
+            await fetchClientHistorial();
+        }
+    };
+
+    initPage();
 });

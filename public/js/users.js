@@ -44,14 +44,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchUsers = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('/api/users', {
-                headers: { 'Authorization': `Bearer ${token}` } // If auth middleware is enabled later
+            const response = await fetch('/api/users/all', {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
+
+            if (response.status === 403) {
+                usersTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-slate-500 font-medium italic">No cuenta con la autorización correspondiente.</td></tr>';
+                if (createUserBtn) createUserBtn.classList.add('hidden'); // Hide create button if unauthorized
+                return;
+            }
+
             if (!response.ok) throw new Error('Failed to fetch users');
             const users = await response.json();
             renderUsers(users);
         } catch (error) {
             console.error('Error fetching users:', error);
+            usersTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-red-500">Error al cargar usuarios.</td></tr>';
         }
     };
 

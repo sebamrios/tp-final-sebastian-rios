@@ -118,7 +118,12 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('user', JSON.stringify(data.user));
 
             alert('Login exitoso');
-            window.location.href = 'mascotas.html';
+
+            if (data.user.role === 'cliente') {
+                window.location.href = `cliente.html?id=${data.user.id}`;
+            } else {
+                window.location.href = 'mascotas.html';
+            }
 
         } catch (err) {
             console.error('Login error:', err);
