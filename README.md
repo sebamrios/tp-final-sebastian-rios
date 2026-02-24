@@ -1,28 +1,23 @@
-# Backend Node TS - Veterinaria Patitas Felices
+# Patitas Felices - Sistema de Gestión Veterinaria
 
-Un pequeño backend desarrollado con Node.js y TypeScript para la gestión de una veterinaria. Incluye autenticación con JWT, manejo de base de datos MySQL y vistas simples con Handlebars.
+## 📝 Descripción General
+"Patitas Felices" es una aplicación de backend robusta diseñada para gestionar las operaciones diarias de una clínica veterinaria. El sistema permite administrar usuarios con diferentes roles (administradores, veterinarios, secretarias y clientes), gestionar el registro de mascotas y mantener un historial clínico detallado de cada una.
 
-## 🚀 Tecnologías
+## 🚀 Tecnologías Utilizadas
+- **Lenguaje:** [TypeScript](https://www.typescriptlang.org/)
+- **Entorno de Ejecución:** [Node.js](https://nodejs.org/)
+- **Framework Web:** [Express](https://expressjs.com/)
+- **Base de Datos:** [MySQL](https://www.mysql.com/)
+- **Contenerización:** [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
+- **Autenticación:** [JSON Web Tokens (JWT)](https://jwt.io/) & [Bcryptjs](https://www.npmjs.com/package/bcryptjs)
+- **Envío de Correos:** [MailerSend](https://www.mailersend.com/)
+- **Motor de Plantillas:** [Handlebars](https://handlebarsjs.com/) (para vistas administrativas)
 
-*   **Node.js** con **TypeScript**
-*   **Express** (Framework Web)
-*   **MySQL** (Base de datos) con `mysql2`
-*   **JWT** (Autenticación)
-*   **Bcryptjs** (Hashing de contraseñas)
-*   **Handlebars** (Motor de plantillas para vistas)
-*   **Docker** & **Docker Compose** (Contenedorización)
-
-## 📋 Prerrequisitos
-
-*   **Docker** y **Docker Compose** instalados.
-*   (Opcional) **Node.js** y **NPM** si deseas ejecutarlo localmente sin Docker.
-
-## 🛠️ Instalación y Configuración
+## 🛠️ Instrucciones de Instalación
 
 1.  **Clonar el repositorio:**
-
     ```bash
-    git clone <url-del-repo>
+    git clone <url-del-repositorio>
     cd backend-node-ts
     ```
 
@@ -43,141 +38,111 @@ Un pequeño backend desarrollado con Node.js y TypeScript para la gestión de un
     
     *   Asegúrate de tener la base de datos MySQL corriendo (puedes usar `docker-compose up mysql` solamente).
     *   Instala dependencias:
-        ```bash
-        npm install
-        ```
+```bash
+docker-compose up -d
+```
     *   Iniciar en modo desarrollo:
-        ```bash
-        npm run dev
-        ```
+```bash
+npm run dev
+```
 
-## 🔌 Endpoints de la API
+## 🔌 Endpoints Principales
 
-### Autenticación y Usuarios (`/api/users`)
+### Autenticación y Usuarios
+- `POST /api/users/login`: Inicia sesión y devuelve un token JWT.
+- `GET /api/users/all`: Lista todos los usuarios (Requiere rol Admin/Vet/Secretaria).
+- `POST /api/users/`: Registra un nuevo usuario.
 
-| Método    | Endpoint             | Descripción                       | Requiere Auth |
-| :---      | :---                 | :---                              | :---          |
-| `POST`   | `/api/users/login`   | Iniciar sesión (Retorna Token JWT) | No            |
-| `POST`   | `/api/users`         | Registrar nuevo usuario            | No            |
-| `GET`    | `/api/users`         | Listar todos los usuarios          | No            |
-| `GET`    | `/api/users/clientes`| Listar solo usuarios clientes      | No            |
-| `GET`    | `/api/users/:id`     | Obtener usuario por ID             | No            |
-| `PUT`    | `/api/users/:id`     | Actualizar usuario                 | si            |
-| `DELETE` | `/api/users/:id`     | Eliminar usuario                   | si            |
+### Mascotas
+- `GET /api/mascotas/all`: Obtiene todas las mascotas registradas.
+- `GET /api/mascotas/cliente/:usuarioId`: Obtiene las mascotas de un cliente específico.
+- `POST /api/mascotas/`: Registra una nueva mascota.
 
-### Mascotas (`/api/mascotas`)
+### Historial Clínico
+- `GET /api/historial/:mascotaId`: Obtiene el historial clínico de una mascota.
+- `POST /api/historial/`: Agrega una nueva entrada al historial clínico.
 
-| Método   | Endpoint                           | Descripción                  | Requiere Auth |
-| :---     | :---                               | :---                         | :---          |
-| `POST`   | `/api/mascotas`                    | Registrar mascota            | No            |
-| `GET`    | `/api/mascotas`                    | Listar todas las mascotas    | No            |
-| `GET`    | `/api/mascotas/cliente/:usuarioId` | Listar mascotas de un cliente| No            |
-| `PUT`    | `/api/mascotas/:id`                | Actualizar mascota           | **Sí** (Token)|
-| `DELETE` | `/api/mascotas/:id`                | Eliminar mascota             | **Sí** (Token)|
+## 🧪 Guía CRUD Completa (Rol Admin)
 
-### Vistas (`/handlebars`)
+Usa estos comandos para verificar el funcionamiento total del sistema del lado del servidor.
 
-| Método | Endpoint            | Descripción          |
-| :---   | :---                | :---                 |
-| `GET`  | `/handlebars`       | Vista Home de prueba |
-| `GET`  | `/handlebars/about` | Vista About (ToDo)   |
+> [!IMPORTANT]
+> Reemplaza `<TU_TOKEN_AQUI>` con el token obtenido en el login. 
+> Reemplaza `<ID>` con el ID real del registro que desees consultar, actualizar o eliminar.
 
---------------------------------------------------------------------------------------
-CURL 
+### 👤 Gestión de Usuarios
+| Acción | Método | Endpoint |
+| :--- | :--- | :--- |
+| **Login** | `POST` | `/api/users/login` |
+| **Listar Todos** | `GET` | `/api/users/all` |
+| **Ver Uno** | `GET` | `/api/users/:id` |
+| **Crear** | `POST` | `/api/users/` |
+| **Actualizar** | `PUT` | `/api/users/:id` |
+| **Eliminar** | `DELETE` | `/api/users/:id` |
 
- curl -X POST http://localhost:3000/api/users \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "Sebastian Rios",
-    "email": "sebastian_test@medrano.com",
-    "password": "password123",
-    "role": "admin"
-  }'
-{"message":"Usuario creado correctamente","userId":5}
+**Ejemplos:**
+```bash
+# Listar todos los usuarios
+curl -X GET http://localhost:3000/api/users/all -H "Authorization: Bearer <TOKEN>"
 
---------------------------------------------------------------------------------------
-curl -X POST http://localhost:3000/api/users \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "Juan Perez",
-    "email": "juan_cliente@medrano.com",
-    "password": "cliente123",
-    "role": "cliente"
-  }'
-{"message":"Usuario creado correctamente","userId":6}
+# Actualizar nombre y rol de un usuario
+curl -X PUT http://localhost:3000/api/users/1 \
+     -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" \
+     -d '{"nombre": "Admin Actualizado", "role": "admin"}'
 
---------------------------------------------------------------------------------------
-$ curl -X POST http://localhost:3000/api/users/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "juan_cliente@medrano.com", 
-    "password": "cliente123"
-  }'
-{"message":"Login exitoso","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJqdWFuX2NsaWVudGVAbWVkcmFuby5jb20iLCJyb2xlIjoiY2xpZW50ZSIsImlhdCI6MTc3MDIzMTEwOSwiZXhwIjoxNzcwMjQ1NTA5fQ.etJnUVuEacD-aUrnl5a6yLld5LHEsro4E-hH9OzqhB8","user":{"id":6,"nombre":"juan_cliente","email":"juan_cliente@medrano.com","role":"cliente"}}
+# Eliminar un usuario
+curl -X DELETE http://localhost:3000/api/users/5 -H "Authorization: Bearer <TOKEN>"
+```
 
---------------------------------------------------------------------------------------
-$ curl -X POST http://localhost:3000/api/mascotas \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "Felix",
-    "especie": "Gato",
-    "raza": "Callejero",
-    "edad": 3,
-    "id_usuario": 5
-  }'
-{"message":"Mascota creada correctamente","id":5}
+### 🐾 Gestión de Mascotas
+| Acción | Método | Endpoint |
+| :--- | :--- | :--- |
+| **Listar Todas** | `GET` | `/api/mascotas/all` |
+| **Listar por Dueño**| `GET` | `/api/mascotas/cliente/:usuarioId` |
+| **Crear** | `POST` | `/api/mascotas/` |
+| **Actualizar** | `PUT` | `/api/mascotas/:id` |
+| **Eliminar** | `DELETE` | `/api/mascotas/:id` |
 
---------------------------------------------------------------------------------------
-$ curl -X DELETE http://localhost:3000/api/users/5 \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJqdWFuX2NsaWVudGVAbWVkcmFuby5jb20iLCJyb2xlIjoiY2xpZW50ZSIsImlhdCI6MTc3MDIzMTEwOSwiZXhwIjoxNzcwMjQ1NTA5fQ.etJnUVuEacD-aUrnl5a6yLld5LHEsro4E-hH9OzqhB8"
-{"message":"Usuario eliminado correctamente"}
+**Ejemplos:**
+```bash
+# Registrar mascota vinculada a usuario con ID 1
+curl -X POST http://localhost:3000/api/mascotas/ \
+     -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" \
+     -d '{"nombre": "Luna", "especie": "Gato", "raza": "Siamés", "edad": 2, "id_usuario": 1}'
 
---------------------------------------------------------------------------------------
-$ curl -X GET http://localhost:3000/api/users
-[{"id":1,"nombre":"juan","email":"juan@example.com","role":"user","created_at":"2026-02-03T01:29:33.000Z"},{"id":2,"nombre":"maria","email":"maria@example.com","role":"user","created_at":"2026-02-03T02:13:04.000Z"},{"id":3,"nombre":"roberto","email":"roberto@mail.com","role":"cliente","created_at":"2026-02-03T02:16:51.000Z"},{"id":4,"nombre":"utn_test","email":"utn_test@medrano.com","role":"admin","created_at":"2026-02-04T01:50:28.000Z"},{"id":6,"nombre":"juan_cliente","email":"juan_cliente@medrano.com","role":"cliente","created_at":"2026-02-04T18:51:10.000Z"}]
+# Actualizar datos de una mascota
+curl -X PUT http://localhost:3000/api/mascotas/1 \
+     -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" \
+     -d '{"edad": 3, "raza": "Siamés Mezcla"}'
+```
 
---------------------------------------------------------------------------------------
-$ curl -X POST http://localhost:3000/api/users \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "Sebastian Rios",
-    "email": "sebastian_test@medrano.com",
-    "password": "password123",
-    "role": "admin"
-  }'
-{"message":"Usuario creado correctamente","userId":7}
+### 📋 Gestión de Historial Clínico
+| Acción | Método | Endpoint |
+| :--- | :--- | :--- |
+| **Ver por Mascota** | `GET` | `/api/historial/:mascotaId` |
+| **Crear Entrada** | `POST` | `/api/historial/` |
+| **Actualizar** | `PUT` | `/api/historial/:id` |
+| **Eliminar** | `DELETE` | `/api/historial/:id` |
 
----------------------------------------------------------------------------------------
-$ curl -X GET http://localhost:3000/api/users
-[{"id":1,"nombre":"juan","email":"juan@example.com","role":"user","created_at":"2026-02-03T01:29:33.000Z"},{"id":2,"nombre":"maria","email":"maria@example.com","role":"user","created_at":"2026-02-03T02:13:04.000Z"},{"id":3,"nombre":"roberto","email":"roberto@mail.com","role":"cliente","created_at":"2026-02-03T02:16:51.000Z"},{"id":4,"nombre":"utn_test","email":"utn_test@medrano.com","role":"admin","created_at":"2026-02-04T01:50:28.000Z"},{"id":6,"nombre":"juan_cliente","email":"juan_cliente@medrano.com","role":"cliente","created_at":"2026-02-04T18:51:10.000Z"},{"id":7,"nombre":"sebastian_test","email":"sebastian_test@medrano.com","role":"admin","created_at":"2026-02-04T18:59:41.000Z"}]
+**Ejemplos:**
+```bash
+# Crear nueva entrada (mascotaId 1)
+curl -X POST http://localhost:3000/api/historial/ \
+     -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" \
+     -d '{"mascotaId": 1, "observaciones": "Chequeo anual", "diagnostico": "Sano", "tratamiento": "Ninguno"}'
 
---------------------------------------------------------------------------------------
-$ curl -X DELETE http://localhost:3000/api/users/7   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJqdWFu
-X2NsaWVudGVAbWVkcmFuby5jb20iLCJyb2xlIjoiY2xpZW50ZSIsImlhdCI6MTc3MDIzMTEwOSwiZXhwIjoxNzcwMjQ1NTA5fQ.etJnUVuEacD-aUrnl5a6yLld5LHEsro4E-hH9OzqhB8" 
-{"message":"Usuario eliminado correctamente"}
+# Actualizar tratamiento de una entrada
+curl -X PUT http://localhost:3000/api/historial/1 \
+     -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" \
+     -d '{"tratamiento": "Vitaminas C cada 12hs"}'
+```
 
---------------------------------------------------------------------------------------
-$ curl -X GET http://localhost:3000/api/users
-[{"id":1,"nombre":"juan","email":"juan@example.com","role":"user","created_at":"2026-02-03T01:29:33.000Z"},{"id":2,"nombre":"maria","email":"maria@example.com","role":"user","created_at":"2026-02-03T02:13:04.000Z"},{"id":3,"nombre":"roberto","email":"roberto@mail.com","role":"cliente","created_at":"2026-02-03T02:16:51.000Z"},{"id":4,"nombre":"utn_test","email":"utn_test@medrano.com","role":"admin","created_at":"2026-02-04T01:50:28.000Z"},{"id":6,"nombre":"juan_cliente","email":"juan_cliente@medrano.com","role":"cliente","created_at":"2026-02-04T18:51:10.000Z"}]
+---
 
-------------------------------------------------------------------------------------------
-$ curl -X POST http://localhost:3000/api/mascotas \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJqdWFuX2NsaWVudGVAbWVkcmFuby5jb20iLCJyb2xlIjoiY2xpZW50ZSIsImlhdCI6MTc3MDIzMTEwOSwiZXhwIjoxNzcwMjQ1NTA5fQ.etJnUVuEacD-aUrnl5a6yLld5LHEsro4E-hH9OzqhB8" \
-  -d '{
-    "nombre": "Felix",
-    "especie": "Gato",
-    "raza": "Callejero",
-    "edad": 3,
-    "id_usuario": 6
-  }'
-{"message":"Mascota creada correctamente","id":6}
+## 🖥️ Opción de Frontend
+El proyecto utiliza una combinación de:
+- **Archivos Estáticos:** La carpeta `/public` contiene archivos HTML, CSS y JS que interactúan con la API. Estos pueden ser servidos directamente por Express.
+- **Vistas Handlebars:** (Opcional/En desarrollo) Disponibles bajo la ruta `/handlebars` para renderizado del lado del servidor.
 
-------------------------------------------------------------------------------------------------
-$ curl -X PUT http://localhost:3000/api/mascotas/6   -H "Content-Type: application/json"   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJqdWFuX2NsaWVudGVAbWVkcmFuby5jb20iLCJyb2xlIjoiY2xpZW50ZSIsImlhdCI6MTc3MDIzMTEwOSwiZXhwIjoxNzcwMjQ1NTA5fQ.etJnUVuEacD-aUrnl5a6yLld5LHEsro4E-hH9OzqhB8"   -d '{
-    "nombre": "Fenix",
-    "especie": "Gato",
-    "raza": "Callejero",
-    "edad": 3,
-    "id_usuario": 6
-  }'
+---
+© 2024 Patitas Felices - Proyecto de Aprendizaje.

@@ -228,6 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
     createPetBtn.addEventListener('click', () => openModal());
     cancelPetBtn.addEventListener('click', closeModal);
 
-    fetchUsers(); // Populate owner select
+    fetchUsers();
     fetchPets();
 });

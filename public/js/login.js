@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isRegistering) {
             payload.nombre = nombre;
-            payload.role = 'user';
+            payload.role = 'cliente';
         }
 
         submitBtn.disabled = true;

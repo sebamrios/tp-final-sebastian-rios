@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const clientId = urlParams.get('id');
 
-    // 🔴 2 — Valida Token
+    // 2 — Valida Token
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     console.log(`[DEBUG UI] Page: cliente.html, URL Param ID: ${clientId}, Logged User ID: ${user.id}, Role: ${user.role}`);
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const pets = await response.json();
-            clientPets = pets; // Store globally for historial fetching
+            clientPets = pets;
             renderPets(pets);
 
         } catch (error) {
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.className = "hover:bg-primary/5 transition-colors group";
 
             const icon = getSpeciesIcon(pet.especie);
-            // 🔴 3 — Optional chaining para evitar crash
+            // 3 — Optional chaining para evitar crash
 
             row.innerHTML = `
                 <td class="table-cell">
