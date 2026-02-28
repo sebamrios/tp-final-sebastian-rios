@@ -145,4 +145,4 @@ El proyecto utiliza una combinación de:
 - **Vistas Handlebars:** (Opcional/En desarrollo) Disponibles bajo la ruta `/handlebars` para renderizado del lado del servidor.
 
 ---
-© 2024 Patitas Felices - Proyecto de Aprendizaje.
+© 2026 Patitas Felices - Proyecto de Aprendizaje.
